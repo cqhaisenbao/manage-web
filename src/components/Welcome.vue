@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="welcome">
         welcome
     </div>
 </template>
@@ -16,5 +16,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.welcome {
 
+}
 </style>
