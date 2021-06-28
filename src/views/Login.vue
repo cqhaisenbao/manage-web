@@ -1,31 +1,50 @@
 <template>
     <div class="login-wrapper">
         <div class="modal">
-            <el-form>
+            <el-form ref="userForm" :model="user" status-icon :rules="rules">
                 <div class="title">火星</div>
-                <el-form-item>
-                    <el-input type="text" prefix-icon="el-icon-user"/>
+                <el-form-item prop="userName">
+                    <el-input type="text" prefix-icon="el-icon-user" v-model="user.userName"/>
+                </el-form-item>
+                <el-form-item prop="userPwd">
+                    <el-input type="password" prefix-icon="el-icon-view" v-model="user.userPwd"/>
                 </el-form-item>
                 <el-form-item>
-                    <el-input type="password" prefix-icon="el-icon-view"/>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" class="btn-login">登录</el-button>
+                    <el-button type="primary" class="btn-login" @click="login">登录</el-button>
                 </el-form-item>
             </el-form>
         </div>
     </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue';
+<script>
 
-export default defineComponent({
+export default {
     name: "Login",
-    setup() {
-        return {};
+    data() {
+        return {
+            user: {
+                userName: '',
+                userPwd: ''
+            },
+            rules: {
+                userName: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+                userPwd: [{required: true, message: '请输入密码', trigger: 'blur'}],
+            }
+        }
+    },
+    methods: {
+        login() {
+            this.$refs.userForm.validate(async (valid) => {
+                if (valid) {
+                    const res = await this.$api.login(this.user)
+                    this.$store.commit('saveUserInfo', res)
+                    await this.$router.push('./welcome')
+                }
+            })
+        }
     }
-});
+};
 </script>
 
 <style lang="scss">
